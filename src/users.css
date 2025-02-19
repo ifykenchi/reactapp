@@ -1,0 +1,33 @@
+.user {
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 60%;
+    padding: 12px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background-color: #f8f4fb;
+    color: #333;
+    font-size: 16px;
+    text-align: left;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.user:hover {
+    background-color: #0004ffd7;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.dropdown {
+    margin-top: 10px; 
+    padding: 10px; 
+    background-color: #f4f4f4; 
+    color: #000;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    opacity: 1;
+    max-height: 500px;
+    overflow: hidden;
+}
