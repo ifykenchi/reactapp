@@ -3,7 +3,7 @@
 ## Overview
 
 I created a simple app that fetches a list of 20 users and added a dropdown
-functionality to display additional details.
+functionality to display additional details for testing.
 
 ## Features
 
