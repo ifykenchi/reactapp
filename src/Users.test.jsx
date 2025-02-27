@@ -30,12 +30,22 @@ const mockUsers = [
 
 beforeEach(() => {
 	vi.clearAllMocks();
-	global.fetch = vi.fn(() =>
-		Promise.resolve({
-			ok: true,
-			json: () => Promise.resolve({ users: mockUsers }),
-		})
-	);
+	global.fetch = vi.fn((url) => {
+		if (url === "/api/users") {
+			return Promise.resolve({
+				ok: true,
+				json: () => Promise.resolve(mockUsers),
+			});
+		} else if (url.startsWith("/api/users/")) {
+			const userId = url.split("/").pop();
+			const user = mockUsers.find((u) => u.id === parseInt(userId));
+			return Promise.resolve({
+				ok: true,
+				json: () => Promise.resolve(user),
+			});
+		}
+		return Promise.reject(new Error("Invalid URL"));
+	});
 	render(<Users />);
 });
 
@@ -107,5 +117,40 @@ describe("Users", () => {
 		expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
 			"Users List"
 		);
+	});
+
+	// Spying Test
+	it("calls fetch with the correct URL when a user is clicked", async () => {
+		await waitFor(() =>
+			expect(screen.getAllByRole("listitem")).toHaveLength(2)
+		);
+
+		const userList = screen.getByRole("list");
+		const userItems = within(userList).getAllByRole("listitem");
+		const emilyItem = userItems.find((item) =>
+			item.textContent.includes("Emily Johnson")
+		);
+
+		expect(emilyItem).toBeInTheDocument();
+		await userEvent.click(emilyItem);
+		expect(global.fetch).toHaveBeenCalledWith("/api/users/1");
+	});
+
+	// Spy test for when same user is clicked twice
+	it("does not call fetch again when same user is clicked twice", async () => {
+		await waitFor(() =>
+			expect(screen.getAllByRole("listitem")).toHaveLength(2)
+		);
+
+		const userList = screen.getByRole("list");
+		const userItems = within(userList).getAllByRole("listitem");
+		const emilyItem = userItems.find((item) =>
+			item.textContent.includes("Emily Johnson")
+		);
+
+		expect(emilyItem).toBeInTheDocument();
+		await userEvent.click(emilyItem);
+		await userEvent.click(emilyItem);
+		expect(global.fetch).toHaveBeenCalledTimes(2); // two because of the useEffect fetch call and then the one for emily when it is clicked
 	});
 });

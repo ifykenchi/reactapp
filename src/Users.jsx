@@ -5,24 +5,36 @@ import { useEffect, useState } from "react";
 export default function Users() {
 	const [users, setUsers] = useState([]);
 	const [error, setError] = useState(null);
-	const [selected, setSelected] = useState(null);
+	const [selectedUser, setSelectedUser] = useState(null);
 
 	useEffect(() => {
-		fetch("https://dummyjson.com/users?limit=20")
+		fetch("/api/users")
 			.then((res) => {
 				if (!res.ok) {
-					throw new Error("No response from the API");
+					throw new Error("No response from the Server");
 				}
 				return res.json();
 			})
 			.then((data) => {
-				setUsers(data.users);
-				// console.log(data.users);
+				setUsers(data);
+				// console.log(data);
 			})
 			.catch((err) => {
 				setError(err.message);
 			});
 	}, []);
+
+	const fetchUserDetails = (id) => {
+		if (selectedUser && selectedUser.id === id) {
+			setSelectedUser(null);
+			return;
+		}
+
+		fetch(`/api/users/${id}`)
+			.then((res) => res.json())
+			.then((data) => setSelectedUser(data))
+			.catch((err) => setError(err.message));
+	};
 
 	if (error) return <p>Error: {error}</p>;
 
@@ -34,26 +46,26 @@ export default function Users() {
 					<li
 						className='user'
 						key={user.id}
-						onClick={() => setSelected(selected === user.id ? null : user.id)}
+						onClick={() => fetchUserDetails(user.id)}
 					>
 						<strong>
 							{user.firstName} {user.lastName}
 						</strong>{" "}
 						- {user.email}
 						{/* Dropdown */}
-						{selected === user.id && (
+						{selectedUser && selectedUser.id === user.id && (
 							<div className='dropdown'>
 								<p>
-									<strong>First Name: {user.firstName}</strong>
+									<strong>First Name: {selectedUser.firstName}</strong>
 								</p>
 								<p>
-									<strong>Last Name: {user.lastName}</strong>
+									<strong>Last Name: {selectedUser.lastName}</strong>
 								</p>
 								<p>
-									<strong>Email: {user.email}</strong>
+									<strong>Email: {selectedUser.email}</strong>
 								</p>
 								<p>
-									<strong>Gender: {user.gender}</strong>
+									<strong>Gender: {selectedUser.gender}</strong>
 								</p>
 							</div>
 						)}
