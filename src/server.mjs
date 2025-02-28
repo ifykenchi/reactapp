@@ -3,7 +3,7 @@ import http from "http";
 const PORT = 3000;
 
 // fetch all users
-async function fetchUsers() {
+export async function fetchUsers() {
 	try {
 		const response = await fetch("https://dummyjson.com/users?limit=20");
 		if (!response.ok) {
@@ -18,7 +18,7 @@ async function fetchUsers() {
 }
 
 // fetch a single user by id
-async function fetchUserById(userId) {
+export async function fetchUserById(userId) {
 	try {
 		const response = await fetch(`https://dummyjson.com/users/${userId}`);
 		if (!response.ok) {
@@ -66,3 +66,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
 	console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default server;
