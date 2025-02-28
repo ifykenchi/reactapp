@@ -2,13 +2,15 @@
 
 ## Overview
 
-I created a simple app that fetches a list of 20 users and added a dropdown
-functionality to display additional details for testing.
+I created a simple app that fetches a list of 20 users from a local Restful API
+and added a dropdown functionality to display additional details. I also wrote
+tests for the frontEnd and Backend.
 
 ## Features
 
 - **Vitest Integration**
 - **React Testing Library**
+- **Node.js**
 
 ### Viewing Test Coverage
 
